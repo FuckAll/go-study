@@ -1,7 +1,19 @@
 package main
 
-import "github.com/astaxie/beego"
-
+import (
+    //be "github.com/astaxie/beego"
+    std "fmt"
+    //"strconv"
+)
+const (
+    a = "A"
+    b 
+)
 func main(){
-    beego.Run("127.0.0.1:8089")
+    //var a int = 65
+    //b := strconv.Itoa(a)
+    std.Println(a)
+    std.Println(b)
+    std.Println(^1)
+    //be.Run("127.0.0.1:8089")
 }
