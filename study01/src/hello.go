@@ -1,19 +1,21 @@
 package main
 
 import (
-    //be "github.com/astaxie/beego"
-    std "fmt"
-    //"strconv"
+	"fmt"
+	"strings"
 )
-const (
-    a = "A"
-    b 
-)
-func main(){
-    //var a int = 65
-    //b := strconv.Itoa(a)
-    std.Println(a)
-    std.Println(b)
-    std.Println(^1)
-    //be.Run("127.0.0.1:8089")
+
+func main() {
+	str := "85903034-1e04-4633-a903-74a4452a7064"
+	st1 := strings.Replace(str, "-", "_", -1)
+	fmt.Println(st1)
+	//resp, err := http.Get("http://www.baidu.com")
+	//if err != nil {
+	//fmt.Println("err")
+	//}
+	//defer resp.Body.Close()
+	//fmt.Println(resp.Header.Get("Connection"))
+	//resp, err := http.Post("http://www.baidu.com", "image/jpeg", &buf)
+
+	//fmt.Println(resp)
 }
