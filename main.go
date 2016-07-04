@@ -13,5 +13,6 @@ func main() {
 	fmt.Println(arrlazy)
 	test(arrlazy)
 	fmt.Println(arrlazy)
+	fmt.Println(arrlazy)
 
 }
