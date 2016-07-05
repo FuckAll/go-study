@@ -1,21 +1,32 @@
 package main
 
 import (
-	//be "github.com/astaxie/beego"
-	std "fmt"
-	//"strconv"
+	"fmt"
+	// "log"
+	"net/http"
+	// "strings"
 )
 
-const (
-	a = "A"
-	b
-)
+type MyMux struct {
+}
 
+func (p *MyMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		sayhelloName(w, r)
+		return
+
+	}
+	http.NotFound(w, r)
+	return
+
+}
 func main() {
-	//var a int = 65
-	//b := strconv.Itoa(a)
-	std.Println(a)
-	std.Println(b)
+	mux := &MyMux{}
+	http.ListenAndServe(":9000", mux)
 
-	//be.Run("127.0.0.1:8089")
+}
+
+func sayhelloName(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello wu")
+
 }
