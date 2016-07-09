@@ -2,31 +2,31 @@ package main
 
 import (
 	"fmt"
-	// "log"
-	"net/http"
-	// "strings"
+	"unsafe"
+	// "github.com/urfave/negroni"
+	// "net/http"
 )
 
-type MyMux struct {
-}
+const (
+	a = "abc"
+	b = len(a)
+	c = unsafe.Sizeof(b)
+)
+const (
+	d byte = 100
+	e int  = 1e10
+)
 
-func (p *MyMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		sayhelloName(w, r)
-		return
-
-	}
-	http.NotFound(w, r)
-	return
-
+const {
+	Sunday = iota
+	Monday 
+	Tuesday
 }
 func main() {
-	mux := &MyMux{}
-	http.ListenAndServe(":9000", mux)
-
-}
-
-func sayhelloName(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello wu")
+	fmt.Println(a)
+	fmt.Println(b)
+	fmt.Println(c)
+	fmt.Println(d)
+	fmt.Println(e)
 
 }
