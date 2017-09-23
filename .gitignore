@@ -1,6 +1,6 @@
 #idea
 *.iml
-.idea
+.idea/
 .vscode
 
 #### sublime ignore ####
