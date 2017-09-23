@@ -1,6 +1,7 @@
 #idea
 *.iml
 .idea
+.vscode
 
 #### sublime ignore ####
 *.sublime-project
