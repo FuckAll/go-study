@@ -1,101 +1,120 @@
 package main
 
-import "fmt"
-import "encoding/json"
-import "os"
-import "reflect"
+import (
+	"fmt"
+	"net/http"
+	"strings"
+	//"io/ioutil"
+	"os"
+	"bufio"
+)
 
-func main() {
-	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
-	var dat map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonStr), &dat); err == nil {
-		fmt.Println(dat)
-		for k, v := range dat {
-			fmt.Sprintln(k, v)
-		}
-	}
-	// str, err := json.Marshal(dat)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println(string(str))
-	enc := json.NewEncoder(os.Stdout)
-	enc.Encode(dat)
-	fmt.Println(reflect.TypeOf(dat))
+func sayhelloName(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.ProtoAtLeast(1, 2))
+	fmt.Println(r.UserAgent())
+	//new := r.WithContext(context.Background())
+	//fmt.Println(new.UserAgent())
 
-}
-func test2() {
-	type Tes struct {
-		good string
-	}
-	type MyData struct {
-		Name  string  `json:"item"`
-		Other float32 `json:"amount"`
-		Test  Tes
-	}
+	fmt.Println("-----------------")
+	//s, _ := ioutil.ReadAll(r.Body)
+	//fmt.Println(string(s))
+	//fmt.Println(r.Method)
 
-	var detail MyData
-	detail.Name = "1"
-	detail.Other = 2
-	detail.Test = Tes{good: "wonderful"}
-	fmt.Println(detail.Test)
-	body, err := json.Marshal(detail)
-	fmt.Println(string(body))
+	r.ParseForm()       //解析参数，默认是不会解析的
+	fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
+	fmt.Println("path", r.URL.Path)
+	fmt.Println("scheme", r.URL.Scheme)
+	fmt.Println(r.Form["url_long"])
+	for k, v := range r.Form {
+		fmt.Println("key:", k)
+		fmt.Println("val:", strings.Join(v, ""))
+	}
+	//fmt.Println(r.PostForm)
+
+	//buf := make([]byte, 1024)
+	f, _, _ := r.FormFile("cv")
+	defer f.Close()
+
+	bufferedReader := bufio.NewReader(f)
+	//bufferedReader.ReadString('\n')
+	//bufferedReader.WriteTo(f)
+
+
+	//f.Read(buf)
+	userFile := "test.txt"
+	fout, err := os.Create(userFile)
+	defer fout.Close()
 	if err != nil {
-		panic(err.Error())
-	}
-	var temp MyData
-	// var temp map[string]interface{}
-	err = json.Unmarshal(body, &temp)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("%v", temp)
-}
-
-func test1() {
-	test := struct {
-		name string
-		age  int
-	}{name: "wonder", age: 11}
-	fmt.Println(test)
-	mashle(test)
-}
-
-func mashle(test interface{}) {
-	message, err := json.Marshal(test)
-	if err != nil {
-		fmt.Println("wonder")
-	}
-	fmt.Printf("%s,%v", string(message), err)
-}
-
-func test(test interface{}) {
-	switch test.(type) {
-	case string:
-		fmt.Println("string")
-	default:
-		fmt.Println("stringsssssss")
-	}
-}
-
-func funcName(a interface{}) {
-	value, ok := a.(string)
-	if !ok {
-		fmt.Println("not ")
-		fmt.Println(value)
+		fmt.Println(userFile, err)
 		return
 	}
-	fmt.Println("The value is ", value)
+	//io.Copy()
+	bufferedReader.WriteTo(fout)
+
+	//fout.Write(buf)
+
+	//r.ParseMultipartForm(10 << 20)
+	//fmt.Println("++++++++++++++++++")
+	//f := r.MultipartForm.File["cv"]
+	//r.FormFile()
+	//for _, v := range f {
+	//	fmt.Println(v.Header)
+	//	fmt.Println(v.Filename)
+	//
+	//	file, _:= v.Open()
+	//
+	//	buf := make([]byte, 1024)
+	//	file.Read(buf)
+	//	fmt.Println(string(buf))
+	//	fmt.Println(file.)
+	//
+	//file.Close()
+	//}
+
+	//mReader , _:= r.MultipartReader()
+	//if mReader == nil {
+	//	fmt.Println("mReader is nil")
+	//}
+	//form, _ := mReader.ReadForm(10<<20)
+	//fmt.Println(form)
+	//fmt.Println(mReader.NextPart())
+	//fmt.Println(mReader.NextPart())
+
+	//for k, v := range r.PostForm{
+	//	fmt.Println("kkkk", k )
+	//	fmt.Println("vvvv", strings.Join(v ,""))
+	//}
+	fmt.Fprintf(w, "Hello astaxie!") //这个写入到w的是输出到客户端的
 }
 
-func assert(test interface{}) {
-	switch t := test.(type) {
-	default:
-		fmt.Printf("unexpected type %T", t)
-	case bool:
-		fmt.Printf("boolean %t\n", t)
-	case int:
-		fmt.Printf("interger %d\n", t)
-	}
+func main() {
+	//http.HandleFunc("/", sayhelloName)       //设置访问的路由
+	//err := http.ListenAndServe(":9090", nil) //设置监听的端口
+	//if err != nil {
+	//	log.Fatal("ListenAndServe: ", err)
+	//}
+
+	//p := []byte{'A', 'b'}
+	////p[0] = 'A'
+	////p[1] = 'b'
+	//fmt.Println(p[0] | 0x20)
+	//fmt.Println(p[1] | 0x20)
+
+
+	//var size []string
+
+	//var input string
+	//var v1, v2, v3 , v4 string
+	//fmt.Scanf("%s %s %s %s", &v1, &v2, &v3, &v4)
+	var tmp string
+	fmt.Scanln(tmp)
+	fmt.Println(tmp)
+
+	//if
+	//
+	//var size []string
+
+	//fmt.Sprintln(v1, v2, v3, v4)
+
+
 }
