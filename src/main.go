@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 	//"io/ioutil"
-	"os"
 	"bufio"
+	"os"
 )
 
 func sayhelloName(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +38,6 @@ func sayhelloName(w http.ResponseWriter, r *http.Request) {
 	bufferedReader := bufio.NewReader(f)
 	//bufferedReader.ReadString('\n')
 	//bufferedReader.WriteTo(f)
-
 
 	//f.Read(buf)
 	userFile := "test.txt"
@@ -100,15 +99,14 @@ func main() {
 	//fmt.Println(p[0] | 0x20)
 	//fmt.Println(p[1] | 0x20)
 
-
 	//var size []string
 
 	//var input string
 	//var v1, v2, v3 , v4 string
 	//fmt.Scanf("%s %s %s %s", &v1, &v2, &v3, &v4)
-	var tmp string
-	fmt.Scanln(tmp)
-	fmt.Println(tmp)
+	// var tmp string
+	// fmt.Scanln(tmp)
+	// fmt.Println(tmp)
 
 	//if
 	//
@@ -116,5 +114,44 @@ func main() {
 
 	//fmt.Sprintln(v1, v2, v3, v4)
 
+	var a []int
+	var n, k int
 
+	fmt.Printf("输入一个十进制的数字：\n")
+	fmt.Scanln(&k)
+	fmt.Printf("输入要转化的进制：\n")
+	fmt.Scanln(&n)
+
+	for k != 0 {
+		a = append(a, k%n)
+		k = k / n
+	}
+
+	// 翻转
+	count := len(a)
+	mid := count / 2
+	for i := 0; i < mid; i++ {
+		a[i], a[count-1] = a[count-1], a[i]
+		count--
+	}
+
+	println("结果是：")
+	for _, d := range a {
+		switch d {
+		case 10:
+			print("A")
+		case 11:
+			print("B")
+		case 12:
+			print("C")
+		case 13:
+			print("D")
+		case 14:
+			print("E")
+		case 15:
+			print("F")
+		default:
+			print(d)
+		}
+	}
 }
