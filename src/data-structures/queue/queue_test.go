@@ -12,4 +12,5 @@ func TestQueue(t *testing.T) {
 	q.Shift()
 	q.Shift()
 	q.Show()
+
 }
