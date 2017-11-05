@@ -7,17 +7,20 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/mdp/qrterminal"
 )
 
 const (
@@ -114,11 +117,22 @@ func random(min, max int) int {
 }
 
 func main() {
-	surgeConf := flag.Bool("surge", false, "get surge conf.")
-	limit := flag.Int("limit", 3, "you need how many data.")
-	backupURL := flag.Bool("backup_url", false, "use backup url.")
-	method := flag.String("nsm", "", "method non support. example: chacha20-ietf-poly1305,chacha20")
+	surgeConf := flag.Bool("surge", false, "生成surge软件配置")
+	limit := flag.Int("limit", 3, "要多少就输入多少，不一定有这么多")
+	backupURL := flag.Bool("backup_url", false, "防止被BAN，启用备用")
+	method := flag.String("nsm", "", "过滤掉一些不想使用的加密方法. example: chacha20-ietf-poly1305,chacha20")
+	qr := flag.Bool("qr", false, "当使用手机端的时候，此选项能够显示配置二维码")
 	flag.Parse()
+
+	// config := qrterminal.Config{
+	// 	Level:     qrterminal.L,
+	// 	Writer:    os.Stdout,
+	// 	BlackChar: qrterminal.WHITE,
+	// 	WhiteChar: qrterminal.BLACK,
+	// }
+
+	// qrterminal.GenerateWithConfig("https://github.com/mdp/qrterminal", config)
+	// qrterminal.Generate("https://github.com/mdp/qrterminal", 3, os.Stdout)
 
 	nonsupportMethod := []string{}
 	nonsupportMethod = append(nonsupportMethod, strings.Split(*method, ",")...)
@@ -148,12 +162,17 @@ func main() {
 	if *surgeConf {
 		generateSurgeConf(best)
 	} else {
-		showShadowSockets(best)
+		if *qr {
+			showShadowSockets(best, true)
+		} else {
+			showShadowSockets(best, false)
+		}
+
 	}
 
 }
 
-func showShadowSockets(data []*SS) {
+func showShadowSockets(data []*SS, qr bool) {
 	showStr := `
 	=======================
 	Area: %s
@@ -165,6 +184,12 @@ func showShadowSockets(data []*SS) {
 	`
 	for _, d := range data {
 		color.Green(showStr, d.Geo, d.IP, d.Port, d.Method, d.Password)
+		if qr {
+			uri := fmt.Sprintf("%s:%s@%s:%s", d.Method, d.Password, d.IP, d.Port)
+			encodeString := base64.StdEncoding.EncodeToString([]byte(uri))
+			encodeString = "ss://" + encodeString
+			qrterminal.Generate(encodeString, 3, os.Stdout)
+		}
 	}
 }
 
