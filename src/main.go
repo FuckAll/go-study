@@ -187,7 +187,8 @@ func showShadowSockets(data []*SS, qr bool) {
 		if qr {
 			uri := fmt.Sprintf("%s:%s@%s:%s", d.Method, d.Password, d.IP, d.Port)
 			encodeString := base64.StdEncoding.EncodeToString([]byte(uri))
-			encodeString = "ss://" + encodeString
+			encodeString = "ss://" + encodeString + "#" + d.Geo + "-" + d.IP
+			fmt.Println(encodeString)
 			qrterminal.Generate(encodeString, 3, os.Stdout)
 		}
 	}
