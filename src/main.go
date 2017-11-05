@@ -1,157 +1,201 @@
+/**
+ *@Description:获取免费ShadowSockets
+ *@author izgnod
+ *@time 2017-11-05 下午15:44
+ */
+
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
+	"io/ioutil"
+	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
-	//"io/ioutil"
-	"bufio"
-	"os"
+	"time"
+
+	"github.com/fatih/color"
 )
 
-func sayhelloName(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.ProtoAtLeast(1, 2))
-	fmt.Println(r.UserAgent())
-	//new := r.WithContext(context.Background())
-	//fmt.Println(new.UserAgent())
+const (
+	url       = "https://ss.weirch.com/ss.php"
+	backupURL = "http://mirror.weirch.com/ss.php"
+	testURL   = "http://www.gstatic.com/generate_204"
+	ssModule  = "https://github.com/R0uter/ss.conf-for-surge/raw/master/ss.module"
+)
 
-	fmt.Println("-----------------")
-	//s, _ := ioutil.ReadAll(r.Body)
-	//fmt.Println(string(s))
-	//fmt.Println(r.Method)
+// SS shadowsockets info
+type SS struct {
+	Health   float64 `json:"health"`
+	IP       string  `json:"ip"`
+	Port     string  `json:"port"`
+	Password string  `json:"password"`
+	Method   string  `json:"method"`
+	Verified string  `json:"verified"`
+	Geo      string  `json:"geo"`
+}
 
-	r.ParseForm()       //解析参数，默认是不会解析的
-	fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
-	fmt.Println("path", r.URL.Path)
-	fmt.Println("scheme", r.URL.Scheme)
-	fmt.Println(r.Form["url_long"])
-	for k, v := range r.Form {
-		fmt.Println("key:", k)
-		fmt.Println("val:", strings.Join(v, ""))
+type respData struct {
+	Data []interface{} `json:"data"`
+}
+
+func getData(backup bool) []*SS {
+	client := &http.Client{}
+	timeStamp := time.Now().Unix()
+	random := random(100, 999)
+
+	parameter := strconv.Itoa(int(timeStamp)) + strconv.Itoa(random)
+	useURL := url
+	if backup {
+		useURL = backupURL
 	}
-	//fmt.Println(r.PostForm)
 
-	//buf := make([]byte, 1024)
-	f, _, _ := r.FormFile("cv")
-	defer f.Close()
-
-	bufferedReader := bufio.NewReader(f)
-	//bufferedReader.ReadString('\n')
-	//bufferedReader.WriteTo(f)
-
-	//f.Read(buf)
-	userFile := "test.txt"
-	fout, err := os.Create(userFile)
-	defer fout.Close()
+	req, err := http.NewRequest("GET", useURL, nil)
 	if err != nil {
-		fmt.Println(userFile, err)
-		return
+		panic(err)
 	}
-	//io.Copy()
-	bufferedReader.WriteTo(fout)
 
-	//fout.Write(buf)
+	q := req.URL.Query()
+	q.Add("_", parameter)
+	req.URL.RawQuery = q.Encode()
 
-	//r.ParseMultipartForm(10 << 20)
-	//fmt.Println("++++++++++++++++++")
-	//f := r.MultipartForm.File["cv"]
-	//r.FormFile()
-	//for _, v := range f {
-	//	fmt.Println(v.Header)
-	//	fmt.Println(v.Filename)
-	//
-	//	file, _:= v.Open()
-	//
-	//	buf := make([]byte, 1024)
-	//	file.Read(buf)
-	//	fmt.Println(string(buf))
-	//	fmt.Println(file.)
-	//
-	//file.Close()
-	//}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Accept", "application/json")
 
-	//mReader , _:= r.MultipartReader()
-	//if mReader == nil {
-	//	fmt.Println("mReader is nil")
-	//}
-	//form, _ := mReader.ReadForm(10<<20)
-	//fmt.Println(form)
-	//fmt.Println(mReader.NextPart())
-	//fmt.Println(mReader.NextPart())
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 
-	//for k, v := range r.PostForm{
-	//	fmt.Println("kkkk", k )
-	//	fmt.Println("vvvv", strings.Join(v ,""))
-	//}
-	fmt.Fprintf(w, "Hello astaxie!") //这个写入到w的是输出到客户端的
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+
+	}
+	re := &respData{}
+	err = json.Unmarshal(body, &re)
+	if err != nil {
+		panic(err)
+	}
+
+	ret := []*SS{}
+	for _, v := range re.Data {
+		tmp := new(SS)
+		for k, vv := range v.([]interface{}) {
+			switch k {
+			case 0:
+				tmp.Health = vv.(float64)
+			case 1:
+				tmp.IP = vv.(string)
+			case 2:
+				tmp.Port = vv.(string)
+			case 3:
+				tmp.Password = vv.(string)
+			case 4:
+				tmp.Method = vv.(string)
+			case 5:
+				tmp.Verified = vv.(string)
+			case 6:
+				tmp.Geo = vv.(string)
+			}
+		}
+		ret = append(ret, tmp)
+	}
+	return ret
+}
+
+func random(min, max int) int {
+	return rand.Intn(max-min) + min
 }
 
 func main() {
-	//http.HandleFunc("/", sayhelloName)       //设置访问的路由
-	//err := http.ListenAndServe(":9090", nil) //设置监听的端口
-	//if err != nil {
-	//	log.Fatal("ListenAndServe: ", err)
-	//}
+	surgeConf := flag.Bool("surge", false, "get surge conf.")
+	limit := flag.Int("limit", 3, "you need how many data.")
+	backupURL := flag.Bool("backup_url", false, "use backup url.")
+	method := flag.String("nsm", "", "method non support. example: chacha20-ietf-poly1305,chacha20")
+	flag.Parse()
 
-	//p := []byte{'A', 'b'}
-	////p[0] = 'A'
-	////p[1] = 'b'
-	//fmt.Println(p[0] | 0x20)
-	//fmt.Println(p[1] | 0x20)
+	nonsupportMethod := []string{}
+	nonsupportMethod = append(nonsupportMethod, strings.Split(*method, ",")...)
+	data := getData(*backupURL)
+	best := []*SS{}
+	var count int
+	// filter just need health 100
+	for _, v := range data {
+		if v.Health == 100 {
+			var ok bool
+			for _, m := range nonsupportMethod {
+				if m == v.Method {
+					ok = true
+				}
+			}
+			if ok {
+				continue
+			}
+			if count >= *limit {
+				break
+			}
 
-	//var size []string
-
-	//var input string
-	//var v1, v2, v3 , v4 string
-	//fmt.Scanf("%s %s %s %s", &v1, &v2, &v3, &v4)
-	// var tmp string
-	// fmt.Scanln(tmp)
-	// fmt.Println(tmp)
-
-	//if
-	//
-	//var size []string
-
-	//fmt.Sprintln(v1, v2, v3, v4)
-
-	var a []int
-	var n, k int
-
-	fmt.Printf("输入一个十进制的数字：\n")
-	fmt.Scanln(&k)
-	fmt.Printf("输入要转化的进制：\n")
-	fmt.Scanln(&n)
-
-	for k != 0 {
-		a = append(a, k%n)
-		k = k / n
-	}
-
-	// 翻转
-	count := len(a)
-	mid := count / 2
-	for i := 0; i < mid; i++ {
-		a[i], a[count-1] = a[count-1], a[i]
-		count--
-	}
-
-	println("结果是：")
-	for _, d := range a {
-		switch d {
-		case 10:
-			print("A")
-		case 11:
-			print("B")
-		case 12:
-			print("C")
-		case 13:
-			print("D")
-		case 14:
-			print("E")
-		case 15:
-			print("F")
-		default:
-			print(d)
+			best = append(best, v)
+			count++
 		}
 	}
+	if *surgeConf {
+		generateSurgeConf(best)
+	} else {
+		showShadowSockets(best)
+	}
+
+}
+
+func showShadowSockets(data []*SS) {
+	showStr := `
+	=======================
+	Area: %s
+	Host: %s 
+	Port: %s
+	Method: %s
+	Password: %s 
+	=======================
+	`
+	for _, d := range data {
+		color.Green(showStr, d.Geo, d.IP, d.Port, d.Method, d.Password)
+	}
+}
+
+func generateSurgeConf(data []*SS) {
+	geo := map[string]int{}
+	geoName := []string{}
+	showStr := "[Proxy]\n💊DIRECT = direct\n"
+	customStr := "%s = custom, %s,%s,%s,%s,%s\n"
+	for _, d := range data {
+		name := d.Geo + strconv.Itoa(geo[d.Geo]+1)
+		geo[d.Geo] = geo[d.Geo] + 1
+		geoName = append(geoName, name)
+		showStr = showStr + fmt.Sprintf(customStr, name, d.IP, d.Port, d.Method, d.Password, ssModule)
+	}
+	chinaProxyStr := "[Proxy Group]\nChinaProxy = select, 💊DIRECT, "
+	proxyStr := "Proxy = select, 💊DIRECT, @Auto, "
+	autoStr := "@Auto = url-test, "
+
+	for _, d := range geoName {
+		chinaProxyStr = chinaProxyStr + d + ","
+		proxyStr = proxyStr + d + ","
+		autoStr = autoStr + d + ","
+	}
+
+	chinaProxyStr = strings.TrimSuffix(chinaProxyStr, ",") + "\n"
+	proxyStr = strings.TrimSuffix(proxyStr, ",") + "\n"
+	autoStr = autoStr + "url =" + testURL + "\n"
+
+	color.Green(showStr + "\n")
+
+	color.Green(chinaProxyStr)
+	color.Green(proxyStr)
+	color.Green(autoStr)
 }
