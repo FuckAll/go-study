@@ -7,6 +7,35 @@ func TestChess(t *testing.T) {
 	// Chess()
 }
 
+func TestTreeNode(t *testing.T) {
+	root := &TreeNode{Val:0}
+	order := helperInOrder(root)
+	t.Logf("this is TestTreeNode Result:%v", order)
+}
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+var lastNodeVal = ^int(^uint(0) >> 1)
+
+func helperInOrder(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+
+	left := helperInOrder(root.Left)
+	if !left {
+		return false
+	}
+	if root.Val <= lastNodeVal {
+		return false
+	}
+	lastNodeVal = root.Val
+	return helperInOrder(root.Right)
+}
+
 func TestCheck(t *testing.T) {
 	CheckBigEndian()
 }
