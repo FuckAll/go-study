@@ -1,8 +1,6 @@
 package rpc
 
 import (
-	"bufio"
-	"fmt"
 	"io"
 	"net/http"
 	"net/rpc"
@@ -10,12 +8,15 @@ import (
 	"testing"
 )
 
+/*
+	将RPC封装成HTTP请求，
+	测试用例：curl -vvv  http://localhost:1234/jsonrpc -X POST --data '{"method":"path/to/pkg.HelloService.Hello","params":["hello"], "id":0}'
+*/
 func TestHttpRPCService(t *testing.T) {
 	err := rpc.RegisterName(HelloServiceName, &HelloServiceImpl{})
 	if err != nil {
 		panic(err)
 	}
-
 	http.HandleFunc("/jsonrpc", func(w http.ResponseWriter, r *http.Request) {
 		var conn io.ReadWriteCloser = struct {
 			io.Writer
@@ -24,9 +25,6 @@ func TestHttpRPCService(t *testing.T) {
 			Writer:     w,
 			ReadCloser: r.Body,
 		}
-		line, _, _ := bufio.NewReader(r.Body).ReadLine()
-
-		fmt.Println(string(line))
 		err2 := rpc.ServeRequest(jsonrpc.NewServerCodec(conn))
 		if err2 != nil {
 			t.Error(err2)
