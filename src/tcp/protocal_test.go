@@ -24,6 +24,7 @@ func TestTcpListen(t *testing.T) {
 		}
 		go func(c net.Conn) {
 			defer c.Close()
+
 			packet, err2 := UnPacket(c)
 			if err2 != nil {
 				fmt.Println("unpacket error:", err2.Error())
