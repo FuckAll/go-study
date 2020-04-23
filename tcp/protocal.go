@@ -47,7 +47,6 @@ func UnPacket(c net.Conn) (*Protocol, error) {
 	header := make([]byte, HEADER_LENGTH)
 	_, err := io.ReadFull(c, header)
 	if err != nil {
-
 		return p, err
 	}
 	p.headLength = binary.BigEndian.Uint32(header[0:4])
