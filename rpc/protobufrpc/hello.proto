@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package protobufrpc;
+
+message String {
+    string value = 1;
+}
+
+service HelloService {
+    rpc Hello (String) returns (String);
+    rpc Channel (stream String) returns (stream String);
+}
+
+service AuthTestService {
+    rpc NeedAuth (String) returns (String);
+}
