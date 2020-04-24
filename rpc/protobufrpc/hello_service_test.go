@@ -84,7 +84,8 @@ func TestHelloChannelClient(t *testing.T) {
 }
 
 func TestHelloClientImpl(t *testing.T) {
-	conn, err := grpc.Dial("localhost:1234", grpc.WithInsecure())
+	//conn, err := grpc.Dial("localhost:12345", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:3999", grpc.WithInsecure())
 	if err != nil {
 		t.Error(err)
 	}

@@ -14,3 +14,7 @@ service HelloService {
 service AuthTestService {
     rpc NeedAuth (String) returns (String);
 }
+
+service SimpleService{
+    rpc Simple(String) returns (String);
+}

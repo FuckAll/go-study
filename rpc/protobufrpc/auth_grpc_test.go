@@ -55,7 +55,7 @@ var _ AuthTestServiceServer = (*AuthTestServiceImpl)(nil)
 func TestAuthRPCService(t *testing.T) {
 	server := grpc.NewServer()
 	RegisterAuthTestServiceServer(server, new(AuthTestServiceImpl))
-	listener, err := net.Listen("tcp", ":1234")
+	listener, err := net.Listen("tcp", "localhost:1234")
 	if err != nil {
 		t.Error(err)
 	}
