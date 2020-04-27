@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package protobufrpc;
 
+import "google/protobuf/descriptor.proto";
+
 message String {
     string value = 1;
 }
@@ -13,4 +15,14 @@ service HelloService {
 
 service AuthTestService {
     rpc NeedAuth (String) returns (String);
+}
+
+extend google.protobuf.FieldOptions {
+    string default_string = 50000;
+    int32 default_int = 50001;
+}
+
+message Message {
+    string name = 1 [(default_string) = "gopher"];
+    int32 age = 2 [(default_int) = 10];
 }

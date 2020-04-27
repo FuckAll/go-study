@@ -13,15 +13,14 @@ func quickSort(values []int, left, right int) {
 	if left < right {
 		// 设置基准值
 		temp := values[left]
-
 		i, j := left, right
 		for {
-			// 从右向左，找到第一个比基准值小的数
+			// 从右向左，找到第一个比基准值大的数
 			for values[j] <= temp && i < j {
 				j--
 			}
 
-			// 从左向右，找到第一个比基准值大的数
+			// 从左向右，找到第一个比基准值小的数
 			for values[i] >= temp && i < j {
 				i++
 			}
@@ -30,7 +29,6 @@ func quickSort(values []int, left, right int) {
 			if i >= j {
 				break
 			}
-
 			// 交换左右两侧的值
 			values[i], values[j] = values[j], values[i]
 		}
@@ -45,5 +43,4 @@ func quickSort(values []int, left, right int) {
 		quickSort(values, left, i-1)
 		quickSort(values, i+1, right)
 	}
-
 }
