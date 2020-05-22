@@ -48,6 +48,7 @@ func NewHTTPDownload() Downloader {
 	return httpDownload
 }
 
+// FTPDownload ...
 type FTPDownload struct {
 	*template
 }
