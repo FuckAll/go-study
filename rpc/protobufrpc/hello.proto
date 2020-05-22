@@ -17,12 +17,6 @@ service AuthTestService {
     rpc NeedAuth (String) returns (String);
 }
 
-extend google.protobuf.FieldOptions {
-    string default_string = 50000;
-    int32 default_int = 50001;
-}
-
-message Message {
-    string name = 1 [(default_string) = "gopher"];
-    int32 age = 2 [(default_int) = 10];
+service SimpleService{
+    rpc Simple(String) returns (String);
 }
