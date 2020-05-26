@@ -13,6 +13,7 @@ require (
 	github.com/mdp/qrterminal v1.0.1
 	github.com/olivere/elastic v6.2.30+incompatible
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	golang.org/x/net v0.0.0-20200421231249-e086a090c8fd
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.29.0

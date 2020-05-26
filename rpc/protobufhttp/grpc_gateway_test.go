@@ -1,13 +1,14 @@
 package protobufhttp
 
 import (
+	"net"
+	"net/http"
+	"testing"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"net"
-	"net/http"
-	"testing"
 )
 
 /*
@@ -51,7 +52,7 @@ func TestRunGRPCService(t *testing.T) {
 	server := grpc.NewServer()
 	RegisterYourServiceServer(server, new(HelloServiceImpl))
 	reflection.Register(server)
-	listener, err := net.Listen("tcp", "localhost:1234", )
+	listener, err := net.Listen("tcp", "localhost:1234")
 	if err != nil {
 		t.Error(err)
 		return
