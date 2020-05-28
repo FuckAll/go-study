@@ -1,6 +1,8 @@
-package design
+package builder
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCharacterBuilder(t *testing.T) {
 	director := new(Director)

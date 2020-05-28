@@ -1,5 +1,5 @@
 // 模板方法模式
-package design
+package template
 
 import (
 	"fmt"

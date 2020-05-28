@@ -8,14 +8,13 @@ require (
 	github.com/fatih/color v1.9.0
 	github.com/fortytw2/leaktest v1.3.0 // indirect
 	github.com/golang/protobuf v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway v1.14.5
+	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/mdp/qrterminal v1.0.1
 	github.com/olivere/elastic v6.2.30+incompatible
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	golang.org/x/net v0.0.0-20200421231249-e086a090c8fd
-	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
-	google.golang.org/grpc v1.29.0
+	google.golang.org/genproto v0.0.0-20200513103714-09dca8ec2884
+	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.21.0
 )

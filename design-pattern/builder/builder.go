@@ -1,4 +1,4 @@
-package design
+package builder
 
 /*
 	建造者模式：用来构建复杂类。将一个复杂的类的构建与类本身分离。将变与不变分离开。
