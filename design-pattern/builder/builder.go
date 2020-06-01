@@ -3,6 +3,11 @@ package builder
 /*
 	建造者模式：用来构建复杂类。将一个复杂的类的构建与类本身分离。将变与不变分离开。
 */
+type Builder interface {
+	SetName(name string) Builder
+	SetArms(arms string) Builder
+	Build() *Character
+}
 
 type Director struct {
 	builder Builder
@@ -37,12 +42,6 @@ func (c *CharacterBuilder) Build() *Character {
 		c.character = &Character{}
 	}
 	return c.character
-}
-
-type Builder interface {
-	SetName(name string) Builder
-	SetArms(arms string) Builder
-	Build() *Character
 }
 
 type Character struct {
