@@ -1,5 +1,9 @@
 package template
 
+/*
+	模板模式：一个抽象类公开定义了执行它的方法的方式/模板。
+	实现一个下载类：下载类要有download()方法和save()方法。
+*/
 import "fmt"
 
 // Downloader ...
@@ -7,28 +11,25 @@ type Downloader interface {
 	Download() error
 }
 
-type implement interface {
+type DownloadImpl interface {
 	download()
 	save()
 }
 
-type template struct {
-	implement
-	uri string
+type DownloadTemplate struct {
+	DownloadImpl // 使用匿名可以达到继承的效果
+	uri          string
 }
 
-func (t *template) Download() error {
-	fmt.Println("begin download...")
-	t.implement.download()
-	fmt.Println("begin save...")
-	t.implement.save()
-	fmt.Println("download complated.")
+func (dt *DownloadTemplate) Download() error {
+	dt.download()
+	dt.save()
 	return nil
 }
 
 // HTTPDownload ..
 type HTTPDownload struct {
-	*template
+	*DownloadTemplate
 }
 
 func (h *HTTPDownload) download() {
@@ -41,16 +42,17 @@ func (h *HTTPDownload) save() {
 
 // NewHTTPDownload ..
 func NewHTTPDownload() Downloader {
+	// 实际实现的方法是HTTPDownload
 	httpDownload := new(HTTPDownload)
-	tpl := new(template)
-	tpl.implement = httpDownload
-	httpDownload.template = tpl
+	tpl := new(DownloadTemplate)
+	tpl.DownloadImpl = httpDownload
+	httpDownload.DownloadTemplate = tpl
 	return httpDownload
 }
 
 // FTPDownload ...
 type FTPDownload struct {
-	*template
+	*DownloadTemplate
 }
 
 func (f *FTPDownload) download() {
@@ -63,9 +65,9 @@ func (f *FTPDownload) save() {
 
 // NewFTPDownload ...
 func NewFTPDownload() Downloader {
-	ftpDonload := new(FTPDownload)
-	tpl := new(template)
-	tpl.implement = ftpDonload
-	ftpDonload.template = tpl
-	return ftpDonload
+	ftpDownload := new(FTPDownload)
+	tpl := new(DownloadTemplate)
+	tpl.DownloadImpl = ftpDownload
+	ftpDownload.DownloadTemplate = tpl
+	return ftpDownload
 }
