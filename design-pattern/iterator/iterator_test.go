@@ -15,7 +15,8 @@ func TestNewListIterator(t *testing.T) {
 		},
 	}
 	for _, test := range testCast {
-		iterator := NewListIterator(test.request)
+		concreteContainer := NewConcreteContainer(test.request)
+		iterator := concreteContainer.getIterator()
 		var cursor int
 		for iterator.hasNext() {
 			item, err := iterator.currentItem()
