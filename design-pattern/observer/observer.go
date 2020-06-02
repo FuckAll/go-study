@@ -2,6 +2,10 @@ package observer
 
 import "fmt"
 
+/*
+	观察者模式：当对象间存在一对多关系时，则使用观察者模式（Observer Pattern）。比如，当一个对象被修改时，则会自动通知依赖它的对象。
+	ConcreteSubject 是实例对象，能够注册观察者，当ConcreteSubject改变状态时，能够逐一的通知观察者。
+*/
 type IMessage interface {
 	getMessage() string
 }
