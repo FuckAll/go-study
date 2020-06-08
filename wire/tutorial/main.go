@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -8,7 +9,7 @@ import (
 
 type Message string
 
-func NewMessage(phrase string) Message {
+func NewMessage(phrase string, ctx context.Context) Message {
 	return Message(phrase)
 }
 
@@ -17,7 +18,7 @@ type Greeter struct {
 	grumpy  bool
 }
 
-func NewGreeter(m Message) Greeter {
+func NewGreeter(m Message, ctx context.Context, good string) Greeter {
 	var grumpy bool
 	if time.Now().Unix()%2 == 0 {
 		grumpy = true

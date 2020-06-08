@@ -5,11 +5,15 @@
 
 package main
 
+import (
+	"context"
+)
+
 // Injectors from wire.go:
 
-func InitializeEvent(phrase string) (Event, error) {
-	message := NewMessage(phrase)
-	greeter := NewGreeter(message)
+func InitializeEvent(phrase string, ctx context.Context) (Event, error) {
+	message := NewMessage(phrase, ctx)
+	greeter := NewGreeter(message, ctx)
 	event, err := NewEvent(greeter)
 	if err != nil {
 		return Event{}, err

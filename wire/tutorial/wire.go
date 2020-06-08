@@ -2,9 +2,12 @@
 
 package main
 
-import "github.com/google/wire"
+import (
+	"context"
+	"github.com/google/wire"
+)
 
-func InitializeEvent(phrase string) (Event, error) {
+func InitializeEvent(phrase string, ctx context.Context, good string) (Event, error) {
 	wire.Build(NewEvent, NewGreeter, NewMessage)
 	return Event{}, nil
 }

@@ -1,6 +1,7 @@
 package mediator_test
 
 import (
+	//"github.com/go-study/src/design-pattern/mediator"
 	"github.com/go-study/src/design-pattern/mediator"
 	"testing"
 )
