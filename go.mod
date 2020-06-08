@@ -8,6 +8,7 @@ require (
 	github.com/fatih/color v1.9.0
 	github.com/fortytw2/leaktest v1.3.0 // indirect
 	github.com/golang/protobuf v1.4.0
+	github.com/google/wire v0.4.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/mdp/qrterminal v1.0.1
