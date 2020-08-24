@@ -13,6 +13,10 @@ type Director struct {
 	builder Builder
 }
 
+func (d *Director) SetBuilder(builder Builder) {
+	d.builder = builder
+}
+
 func (d *Director) Create(name, arms string) *Character {
 	return d.builder.SetArms(arms).SetName(name).Build()
 }
