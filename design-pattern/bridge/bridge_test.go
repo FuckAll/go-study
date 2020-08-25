@@ -6,11 +6,14 @@ import (
 )
 
 func TestBridge(t *testing.T) {
-	redCircle := new(bridge.Circle)
-	redCircle.Circle(1, 2, 3, new(bridge.RedCircle))
-	redCircle.Draw()
+	var shape bridge.Shape
+	shape = bridge.NewCircle(1, 2, 3)
 
-	greenCircle := new(bridge.Circle)
-	greenCircle.Circle(4, 5, 6, new(bridge.GreenCircle))
-	greenCircle.Draw()
+	// RedCircle
+	shape.SetDrawAPI(new(bridge.RedCircle))
+	shape.Draw()
+
+	// GreenCircle
+	shape.SetDrawAPI(new(bridge.GreenCircle))
+	shape.Draw()
 }
