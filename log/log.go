@@ -20,4 +20,5 @@ func init() {
 	}
 
 	Trace = log.New(ioutil.Discard, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
+	_ = file
 }
